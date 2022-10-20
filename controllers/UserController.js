@@ -1,3 +1,5 @@
+let UserModel = require('../models/UserModel')
+
 class UserController{
 
     async index(req, res) {}
@@ -14,6 +16,16 @@ class UserController{
         if(password == undefined){
             return res.status(400).json({err: "O password é inválido!"}) //BAD REQUEST
         }
+
+        let emailExists = await UserModel.findEmail(email);
+
+        if(emailExists){
+            res.status(406).json({err: "O e-mail já esta cadastrado!"})
+            return;
+        }
+
+        await UserModel.new(name, email, password)
+
         res.status(200).send("Tudo Ok!")
     }
 }
