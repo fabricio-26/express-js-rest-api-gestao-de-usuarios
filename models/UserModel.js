@@ -4,6 +4,30 @@ let bcrypt = require('bcrypt');
 // Service
 class UserModel{
 
+    async findAll(){
+        try{
+            let result = await knex.select(["id", "name","email", "role"]).table("users");
+            return result
+        }catch(err){
+            console.log(err);
+            return [];
+        }
+    }
+
+    async findById(id){
+        try{
+            let result = await knex.select(["id", "name","email", "role"]).where({id:id}).table("users")
+            if(result.length > 0){
+                return result[0];
+            }else{
+                return undefined
+            }
+        }catch(err){
+            console.log(err);
+            return undefined
+        }
+    }
+
     async new(name, email, password){
         try{
             let hash = await bcrypt.hash(password, 10)
