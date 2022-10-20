@@ -42,6 +42,32 @@ class UserController{
 
         res.status(200).send("Tudo Ok!")
     }
+
+    async edit(req, res) {
+        let {id, name, email, role} = req.body;
+        let result = await UserModel.update(id, name, email, role);
+        if(result != undefined){
+            if(result.status){
+                res.status(200).send("Tudo OK!")
+            }else{
+                res.status(406).send(result.err)
+            }
+        }else{
+            res.status(406).send("Ocorreu um erro no servidor!")
+        }
+    }
+
+    async remove(req, res){
+        let id = req.params.id;
+
+        let result = await UserModel.delete(id);
+
+        if(result.status){
+            res.status(200).send("Tudo OK!")
+        }else{
+            res.status(406).send(result.err)
+        }
+    }
 }
 
 module.exports = new UserController();

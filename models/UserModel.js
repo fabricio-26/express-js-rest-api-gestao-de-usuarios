@@ -51,6 +51,59 @@ class UserModel{
             return false;
         }
     }
+
+    async update(id, name, email, role){
+        var user = await this.findById(id);
+
+        if(user != undefined){
+
+            let editUser = {};
+
+            if(email != undefined){
+                if(email != user.email){
+                    let result = await this.findEmail(email);
+                    if(result == false){
+                        editUser.email = email;
+                    }else{
+                        return {status: false,err:"O e-mail já esta cadastrado!"}
+                    }
+                }
+            }
+
+            if(name != undefined){
+                editUser.name = name
+            }
+
+            if(role != undefined){
+                editUser.role = role
+            }
+
+            try{
+                await knex.update(editUser).where({id: id}).table("users")
+                return {status: true}
+            }catch(err){
+                return {status: false,err: "O usuário já existe!"}
+            }
+
+        }else{
+            return {status: false,err:"O usuário não existe!"}
+        }
+    }
+
+    async delete(id){
+        var user = await this.findById(id);
+
+        if(user != undefined){
+           try{
+            await knex.delete().where({id: id}).table("users");
+            return {status: true}
+           }catch(err){
+            return {status: false,err: err}
+           }
+        }else{
+            return {status: false,err: "O ususario não existe, portanto não pode ser deletado."}
+        }
+    }
 }
 
 module.exports = new UserModel();
