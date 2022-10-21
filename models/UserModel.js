@@ -1,5 +1,5 @@
 const knex = require('../database/connection');
-let bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt'); 
 const PasswordToken = require("./PasswordToken")
 
 // Service

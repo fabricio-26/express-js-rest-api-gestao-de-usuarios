@@ -1,4 +1,4 @@
-let knex = require("../database/connection");
+const knex = require("../database/connection");
 const UserModel = require("./UserModel");
 
 

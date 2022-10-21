@@ -1,5 +1,5 @@
-let UserModel = require('../models/UserModel')
-let PasswordToken = require('../models/PasswordToken');
+const UserModel = require('../models/UserModel')
+const PasswordToken = require('../models/PasswordToken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 const { RESERVED } = require('mysql2/lib/constants/client');
