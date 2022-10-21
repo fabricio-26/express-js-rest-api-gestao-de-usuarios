@@ -1,5 +1,6 @@
 const knex = require('../database/connection');
 let bcrypt = require('bcrypt'); 
+const PasswordToken = require("./PasswordToken")
 
 // Service
 class UserModel{
@@ -117,6 +118,12 @@ class UserModel{
         }else{
             return {status: false,err: "O ususario não existe, portanto não pode ser deletado."}
         }
+    }
+
+    async changePassword(newPassword,id,token){
+        let hash = await bcrypt.hash(newPassword, 10);
+        await knex.update({password: hash}).where({id: id}).table("users");
+        await PasswordToken.setUsed(token)
     }
 }
 

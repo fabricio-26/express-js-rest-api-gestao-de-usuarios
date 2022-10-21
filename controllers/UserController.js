@@ -80,6 +80,18 @@ class UserController{
             res.status(406).send(result.err)
         }
     }
+
+    async changePassword(req, res) {
+        let token = req.body.token;
+        let password = req.body.password;
+        let isTokenValid = await PasswordToken.validate(token);
+        if(isTokenValid.status){
+            await UserModel.changePassword(password,isTokenValid.token.user_id, isTokenValid.token.token);
+            res.status(200).send("Senha alterada!")
+        }else{
+            res.status(406).send("Token inválido!")
+        }
+    }
 }
 
 module.exports = new UserController();

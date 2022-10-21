@@ -26,6 +26,29 @@ class PasswordToken{
         }
     }
 
+    async validate(token){
+        try{
+            var result = await knex.select().where({token: token}).table("passwordtokens");
+            if(result.length > 0){
+                let tk = result[0];
+
+                if(tk.used){
+                    return {status: false}
+                }else{
+                    return {status: true, token: tk}
+                }
+            }else{
+                return {status: false}
+            }
+        }catch(err){
+            console.log(err);
+            return {status: false}
+        }
+    }
+    async setUsed(token){
+        await knex.update({used: 1}).where({token: token}).table("passwordTokens")
+    }
+
 }
 
 module.exports = new PasswordToken();
