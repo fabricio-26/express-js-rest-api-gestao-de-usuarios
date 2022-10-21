@@ -1,5 +1,10 @@
 let UserModel = require('../models/UserModel')
-let PasswordToken = require('../models/PasswordToken')
+let PasswordToken = require('../models/PasswordToken');
+const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const { RESERVED } = require('mysql2/lib/constants/client');
+
+const JWTsecret = "szdrgxzdgxg"
 
 class UserController{
 
@@ -90,6 +95,25 @@ class UserController{
             res.status(200).send("Senha alterada!")
         }else{
             res.status(406).send("Token inválido!")
+        }
+    }
+
+    async login(req, res){
+        let {email, password} = req.body
+
+        let user = await UserModel.findByEmail(email);
+
+        if(user != undefined){
+            let result = await bcrypt.compare(password, user.password);
+
+            if(result){
+                let token = jwt.sign({ email: user.email, role: user.role}, JWTsecret);
+                res.status(200).json({token: token})
+            }else{
+                res.status(406).send("Senha incorreta")
+            }
+        }else{
+            res.json({status: false})
         }
     }
 }
